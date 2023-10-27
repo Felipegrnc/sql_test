@@ -7,7 +7,6 @@ FROM (
         MAX(CASE
             WHEN strftime('%Y-%m', sal_date) = strftime('%Y-%m', MAX(sal_date)) THEN sal_date
             WHEN strftime('%Y-%m', sql_date) = strftime('%Y-%m', MAX(sql_date)) THEN sql_date
-            -- Agrega más columnas de fecha aquí según sea necesario
             ELSE NULL
         END) AS RecentDate
     FROM
