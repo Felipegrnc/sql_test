@@ -1,0 +1,19 @@
+SELECT Mes, 
+       SUM(CASE WHEN Columna = 'Conversiones a SAL' THEN 1 ELSE 0 END) AS Convrs_SAL,
+       SUM(CASE WHEN Columna = 'Conversiones a SQL' THEN 1 ELSE 0 END) AS Convrs_SQL,
+       SUM(CASE WHEN Columna = 'Conversiones a OPP' THEN 1 ELSE 0 END) AS Convrs_OPP,
+       SUM(CASE WHEN Columna = 'Finalizados con éxito' THEN 1 ELSE 0 END) AS Convrs_exito,
+       SUM(CASE WHEN Columna = 'Finalizados sin éxito' THEN 1 ELSE 0 END) AS Convrs_perdida
+FROM (
+    SELECT 'Conversiones a SAL' AS Columna, strftime('%Y-%m', sal_date) AS Mes FROM data WHERE c_sal__c = 1
+    UNION ALL
+    SELECT 'Conversiones a SQL' AS Columna, strftime('%Y-%m', sql_date) AS Mes FROM data WHERE c_sql__c = 1
+    UNION ALL
+    SELECT 'Conversiones a OPP' AS Columna, strftime('%Y-%m', opportunity_date) AS Mes FROM data WHERE c_opp__c = 1
+    UNION ALL
+    SELECT 'Finalizados con éxito' AS Columna, strftime('%Y-%m', close_date) AS Mes FROM data WHERE stagename = 'Closed Won'
+  	UNION ALL
+    SELECT 'Finalizados sin éxito' AS Columna, strftime('%Y-%m', close_date) AS Mes FROM data WHERE stagename = 'Closed Lost'
+) 
+GROUP BY Mes
+ORDER BY Mes;
